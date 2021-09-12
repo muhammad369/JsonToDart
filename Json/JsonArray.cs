@@ -83,6 +83,7 @@ namespace Selim.Json
 
         public int Length { get { return values.Count; } }
 
+       
         public JsonValue[] getValues()
         {
             return values.ToArray();
@@ -215,5 +216,28 @@ namespace Selim.Json
             }
            
 		}
-	}
+
+		public override string dartTypeName => $"List<{((Length == 0 || values[0] is JsonNull)? "Object?" : values[0].dartTypeName)}>";
+
+		public override string toDartMapAssignmentExpr(string name)
+        {
+			var nullType = (Length == 0 || values[0] is JsonNull);
+
+			return $"\t\tif (this.{name} != null) {{\r\n" +
+				$"\t\t\tdata['{name}'] = this.{name}?.map((v) => v).toList();\r\n" +
+				$"\t\t}}";
+        }
+
+        public override string toDartMapFetchingExpr(string name)
+        {
+			var nullType = (Length == 0 || values[0] is JsonNull);
+
+			return $"\t\tif (map['{name}'] != null) {{\r\n" +
+				$"\t\t\t{name} = [];\r\n" +
+				$"\t\t\tmap['{name}'].forEach((v) {{\r\n"+
+				$"\t\t\t\t{name}!.add(v);\r\n" +
+				$"\t\t\t}});\r\n" +
+				$"\t\t}}";
+		}
+    }
 }

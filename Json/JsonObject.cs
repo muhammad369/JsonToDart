@@ -165,7 +165,78 @@ namespace Selim.Json
             }
         }
 
-	}
+
+        public override string dartTypeName => className ?? throw new Exception("set class name first");
+
+
+        public override string toDartMapAssignmentExpr(string name)
+        {
+            return $"\t\tif (this.{name} != null) {{\r\n" +
+                   $"\t\t\tdata['{name}'] = this.{name}?.toMap();\r\n"+
+                   $"\t\t}}";
+        }
+
+        public override string toDartMapFetchingExpr(string name)
+        {
+            return $"\t{name} = map['{name}'] != null ? ({dartTypeName}()..fromMap(map['{name}'])) : null;";
+        }
+
+        string className;
+        public void setClassName(string name) => className = name;
+
+        public string createDartClass(StringBuilder sb)
+        {
+            sb.AppendLine($"class {dartTypeName} extends Serializable{{");
+
+            // declarations
+            foreach (var item in this.nameValues)
+            {
+                sb.AppendLine(item.value.toDartFieldDeclaration(item.name));
+            }
+
+            sb.AppendLine();
+
+            // constructor
+            sb.Append($"\t{dartTypeName}({{");
+            foreach (var item in this.nameValues)
+            {
+                sb.Append(item.value.toDartConstuctorParam(item.name));
+            }
+            sb.AppendLine("});");
+            sb.AppendLine();
+
+            // from map method
+            sb.AppendLine("\t@override");
+            sb.AppendLine("\tvoid fromMap(Map<String, dynamic> map) {");
+            //
+            foreach (var item in this.nameValues)
+            {
+                sb.AppendLine(item.value.toDartMapFetchingExpr(item.name));
+            }
+            //
+            sb.AppendLine("\t}");
+            sb.AppendLine();
+
+            // to map method
+            sb.AppendLine("\t@override");
+            sb.AppendLine("\tMap<String, dynamic> toMap() {");
+            sb.AppendLine("\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();");
+            //
+            foreach (var item in this.nameValues)
+            {
+                sb.AppendLine(item.value.toDartMapAssignmentExpr(item.name));
+            }
+            //
+            sb.AppendLine("\t\treturn data;");
+            sb.AppendLine("\t}");
+
+
+            sb.AppendLine("}");
+            //
+            return sb.ToString();
+        }
+
+    }
 
 
     public class NameValue

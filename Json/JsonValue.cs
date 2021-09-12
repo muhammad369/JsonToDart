@@ -40,5 +40,33 @@ namespace Selim.Json
             }
         }
 
+        // dart methods
+
+        public string toDartFieldDeclaration(string name)
+        {
+            return $"\t{this.dartTypeName}? {name};";
+        }
+
+        public string toDartConstuctorParam(string name)
+        {
+            return $"this.{name}, ";
+        }
+
+        /// <summary>
+        /// to be used in toMap()
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public abstract string toDartMapAssignmentExpr(string name);
+
+        /// <summary>
+        /// to be used in fromMap()
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public abstract string toDartMapFetchingExpr(string name);
+
+        public abstract string dartTypeName { get; }
+
     }
 }

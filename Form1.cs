@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Selim.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,6 +26,35 @@ namespace JsonToDart
         private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // copy btn
+            try
+            {
+                Clipboard.SetText(dartTextBox.Text);
+            }
+            catch { }
+        }
+
+        private void convertBtn_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(jsonTextBox.Text)) return;
+            //
+            var jp = new JsonParser();
+            var json = jp.Parse(jsonTextBox.Text);
+
+            if (!(json is JsonObject))
+            {
+                //ShowDialog()
+                return;
+            }
+            //
+            var jObject = json as JsonObject;
+
+            jObject.setClassName(string.IsNullOrWhiteSpace(classNameTextBox.Text)? "RootClass" : classNameTextBox.Text);
+            dartTextBox.Text = jObject.createDartClass(new StringBuilder());
         }
     }
 }
