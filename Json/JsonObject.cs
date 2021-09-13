@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JsonToDart;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -172,13 +173,13 @@ namespace Selim.Json
         public override string toDartMapAssignmentExpr(string name)
         {
             return $"\t\tif (this.{name} != null) {{\r\n" +
-                   $"\t\t\tdata['{name}'] = this.{name}?.toMap();\r\n"+
+                   $"\t\t\tdata['{name}'] = this.{name}!.toMap();\r\n"+
                    $"\t\t}}";
         }
 
         public override string toDartMapFetchingExpr(string name)
         {
-            return $"\t{name} = map['{name}'] != null ? ({dartTypeName}()..fromMap(map['{name}'])) : null;";
+            return $"\t\t{name} = map['{name}'] != null ? ({dartTypeName}()..fromMap(map['{name}'])) : null;";
         }
 
         string className;
@@ -191,6 +192,16 @@ namespace Selim.Json
             // declarations
             foreach (var item in this.nameValues)
             {
+                if(item.value is JsonObject)
+                {
+                    setInnerType(item.value as JsonObject, item.name);
+                }
+                //
+                if(item.value is JsonArray && (item.value as JsonArray).Length > 0 && (item.value as JsonArray).getValue(0) is JsonObject)
+                {
+                    setInnerType((item.value as JsonArray).getValue(0) as JsonObject, item.name);
+                }
+                //
                 sb.AppendLine(item.value.toDartFieldDeclaration(item.name));
             }
 
@@ -230,10 +241,25 @@ namespace Selim.Json
             sb.AppendLine("\t\treturn data;");
             sb.AppendLine("\t}");
 
-
             sb.AppendLine("}");
+            sb.AppendLine();
             //
             return sb.ToString();
+        }
+
+        private void setInnerType(JsonObject jsonObject, string name)
+        {
+            jsonObject.setClassName(capitalizeFirstLetter(name));
+            DartClassGenerator.innerObjects.Enqueue(jsonObject);
+        }
+
+        public static string capitalizeFirstLetter(string source)
+        {
+            if (string.IsNullOrEmpty(source))
+                return string.Empty;
+            char[] letters = source.ToCharArray();
+            letters[0] = char.ToUpper(letters[0]);
+            return new string(letters);
         }
 
     }

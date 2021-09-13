@@ -217,25 +217,25 @@ namespace Selim.Json
            
 		}
 
-		public override string dartTypeName => $"List<{((Length == 0 || values[0] is JsonNull)? "Object?" : values[0].dartTypeName)}>";
+		public override string dartTypeName => $"List<{((Length == 0 || values[0] is JsonNull)? "Object?" : $"{values[0].dartTypeName}?")}>";
 
 		public override string toDartMapAssignmentExpr(string name)
         {
-			var nullType = (Length == 0 || values[0] is JsonNull);
+			var notObject = (Length == 0 || !(values[0] is JsonObject));
 
 			return $"\t\tif (this.{name} != null) {{\r\n" +
-				$"\t\t\tdata['{name}'] = this.{name}?.map((v) => v).toList();\r\n" +
+				$"\t\t\tdata['{name}'] = this.{name}!.map((v) => v{(notObject? "": "?.toMap()")}).toList();\r\n" +
 				$"\t\t}}";
         }
 
         public override string toDartMapFetchingExpr(string name)
         {
-			var nullType = (Length == 0 || values[0] is JsonNull);
+			var notObject = (Length == 0 || !(values[0] is JsonObject));
 
 			return $"\t\tif (map['{name}'] != null) {{\r\n" +
 				$"\t\t\t{name} = [];\r\n" +
 				$"\t\t\tmap['{name}'].forEach((v) {{\r\n"+
-				$"\t\t\t\t{name}!.add(v);\r\n" +
+				$"\t\t\t\t{name}!.add({(notObject? "v" : $"({values[0].dartTypeName}()..fromMap(v))")});\r\n" +
 				$"\t\t\t}});\r\n" +
 				$"\t\t}}";
 		}
