@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>J2d</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\J2dLib\J2dLib.csproj" />
+  </ItemGroup>
+
+</Project>

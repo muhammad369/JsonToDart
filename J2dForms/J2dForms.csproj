@@ -6,4 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\J2dLib\J2dLib.csproj" />
+  </ItemGroup>
+
 </Project>
