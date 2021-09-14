@@ -3,15 +3,16 @@ using Selim.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
+using TextCopy;
 
 namespace J2dConsole
 {
-    class Program
+    public class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            Console.WriteLine("DartToJson version 1.1.0");
+            
+            Console.WriteLine("DartToJson version 1.0.0");
             //
             if(args.Length == 0)
             {
@@ -32,8 +33,9 @@ namespace J2dConsole
             else writeHelp();
             //
             Console.WriteLine("Press any key to exit");
-            Console.Read();
+            Console.ReadKey();
 
+        
         }
 
         private static void runInteractiveMode()
@@ -41,18 +43,12 @@ namespace J2dConsole
             throw new NotImplementedException();
         }
 
-        private static async Task runClipboardModeAsync(string[] args)
+        public static async Task runClipboardModeAsync(string[] args)
         {
             string input, className = null;
-            try
-            {
-                input = await Clipboard.GetTextAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
+
+            input = await ClipboardUtil.getTextAsync();
+            if (input == null) return;
             //
             className = args.Length > 1 ? args[1] : "RootClass";
 
@@ -60,31 +56,17 @@ namespace J2dConsole
 
             if (dart == null) return;
 
-            try
-            {
-                await Clipboard.SetTextAsync(dart);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
+            if (!(await ClipboardUtil.setTextAsync(dart))) return;
 
             Console.WriteLine("Done");
         }
 
-        private static void runFileMode(string[] args)
+        public static void runFileMode(string[] args)
         {
             string input, className = null;
-            try
-            {
-                input = File.ReadAllText(args[1]);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
+
+            input = FileUtil.readFile(args[1]);
+            if (input == null) return;
 
             className = args.Length > 3 ? args[3] : "RootClass";
 
@@ -92,15 +74,7 @@ namespace J2dConsole
 
             if (dart == null) return;
 
-            try
-            {
-                 File.WriteAllText(args[2], dart);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
+            if(! FileUtil.writeFile(args[2], dart)) return;
 
             Console.WriteLine("Done");
 
@@ -134,7 +108,6 @@ namespace J2dConsole
                 //
                 var jsonObject = json as JsonObject;
 
-                
                 var generator = new DartClassGenerator();
 
                 return generator.generateDartClass(jsonObject, className);
