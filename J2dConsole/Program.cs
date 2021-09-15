@@ -11,7 +11,7 @@ namespace J2dConsole
     {
         public static async Task Main(string[] args)
         {
-            
+            args = new string[] {"-i" };
             Console.WriteLine("DartToJson version 1.0.0");
             //
             if(args.Length == 0)
@@ -28,7 +28,7 @@ namespace J2dConsole
             }
             else if(args[0] == "-i")
             {
-                runInteractiveMode();
+                await runInteractiveModeAsync();
             }
             else writeHelp();
             //
@@ -38,9 +38,75 @@ namespace J2dConsole
         
         }
 
-        private static void runInteractiveMode()
+        private static async Task runInteractiveModeAsync()
         {
-            throw new NotImplementedException();
+            string input = null, className = null;
+
+            // take the input
+
+            do
+            {
+                Console.WriteLine("How do you want to input your json ?");
+                Console.WriteLine("[f] file [c] clipboard [h] here in the console [x] exit");
+                var option = Console.ReadLine();
+                if(option == "f")
+                {
+                    Console.WriteLine("Write the file path and hit Enter:");
+                    input = FileUtil.readFile(Console.ReadLine());
+                }
+                else if(option == "c")
+                {
+                    input = await ClipboardUtil.getTextAsync();
+                }
+                else if(option == "h")
+                {
+                    input = ConsoleUtil.readConsoleMultiline();
+                }
+                else if(option == "x")
+                {
+                    return;
+                }
+            }
+            while (input == null);
+
+            // take the class name
+
+            Console.WriteLine("What is the name you prefer for your generated class? Leave empty for default (RootClass)");
+            var cn = Console.ReadLine();
+            className = string.IsNullOrWhiteSpace(cn)? "RootClass" : cn;
+
+            // process
+            var dart = createDartClass(input, className);
+
+            if (dart == null) return;
+
+            // write the output
+
+            do
+            {
+                Console.WriteLine("How do you want to take the generated dart code?");
+                Console.WriteLine("[f] file [c] clipboard [h] here in the console [x] exit");
+                var option = Console.ReadLine();
+                if (option == "f")
+                {
+                    Console.WriteLine("Write the file path and hit Enter:");
+                    FileUtil.writeFile(Console.ReadLine(), dart);
+                }
+                else if (option == "c")
+                {
+                    await ClipboardUtil.setTextAsync(dart);
+                }
+                else if (option == "h")
+                {
+                    Console.WriteLine(dart);
+                }
+                else if (option == "x")
+                {
+                    return;
+                }
+            }
+            while (true);
+
         }
 
         public static async Task runClipboardModeAsync(string[] args)
