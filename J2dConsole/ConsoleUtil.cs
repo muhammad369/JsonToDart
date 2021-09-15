@@ -12,7 +12,7 @@ namespace J2dConsole
             while(true)
             {
                 ConsoleKeyInfo key = Console.ReadKey();
-                if (!(key.Key == ConsoleKey.Enter && key.Modifiers == ConsoleModifiers.Control))
+                if (key.Key == ConsoleKey.Enter && key.Modifiers == ConsoleModifiers.Control)
                 {
                     break;
                 }

@@ -1,4 +1,5 @@
-﻿using JsonToDart;
+﻿using J2dLib;
+using JsonToDart;
 using Selim.Json;
 using System;
 using System.IO;
@@ -11,7 +12,7 @@ namespace J2dConsole
     {
         public static async Task Main(string[] args)
         {
-            args = new string[] {"-i" };
+            //args = new string[] {"-i" };
             Console.WriteLine("DartToJson version 1.0.0");
             //
             if(args.Length == 0)
@@ -30,12 +31,42 @@ namespace J2dConsole
             {
                 await runInteractiveModeAsync();
             }
+            else if (args[0] == "-s")
+            {
+                await provideTheSerializableCodeAsync();
+            }
             else writeHelp();
             //
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
 
         
+        }
+
+        private static async Task provideTheSerializableCodeAsync()
+        {
+            var dart = Resource1.Serializable;
+
+            Console.WriteLine("How do you want to take the Serializable class dart code?");
+            Console.WriteLine("[f] file [c] clipboard [h] here in the console [x] exit:");
+            var option = Console.ReadLine();
+            if (option == "f")
+            {
+                Console.WriteLine("Write the file path and hit Enter:");
+                FileUtil.writeFile(Console.ReadLine(), dart);
+            }
+            else if (option == "c")
+            {
+                await ClipboardUtil.setTextAsync(dart);
+            }
+            else if (option == "h")
+            {
+                Console.WriteLine(dart);
+            }
+            else if (option == "x")
+            {
+                return;
+            }
         }
 
         private static async Task runInteractiveModeAsync()
@@ -47,7 +78,7 @@ namespace J2dConsole
             do
             {
                 Console.WriteLine("How do you want to input your json ?");
-                Console.WriteLine("[f] file [c] clipboard [h] here in the console [x] exit");
+                Console.WriteLine("[f] file [c] clipboard [h] here in the console [x] exit:");
                 var option = Console.ReadLine();
                 if(option == "f")
                 {
@@ -60,6 +91,7 @@ namespace J2dConsole
                 }
                 else if(option == "h")
                 {
+                    Console.WriteLine("Write your json and press CTRL+Enter to finish:");
                     input = ConsoleUtil.readConsoleMultiline();
                 }
                 else if(option == "x")
@@ -71,7 +103,7 @@ namespace J2dConsole
 
             // take the class name
 
-            Console.WriteLine("What is the name you prefer for your generated class? Leave empty for default (RootClass)");
+            Console.WriteLine("What is the name you prefer for your generated class? Leave empty for default (RootClass):");
             var cn = Console.ReadLine();
             className = string.IsNullOrWhiteSpace(cn)? "RootClass" : cn;
 
@@ -85,7 +117,7 @@ namespace J2dConsole
             do
             {
                 Console.WriteLine("How do you want to take the generated dart code?");
-                Console.WriteLine("[f] file [c] clipboard [h] here in the console [x] exit");
+                Console.WriteLine("[f] file [c] clipboard [h] here in the console [x] exit:");
                 var option = Console.ReadLine();
                 if (option == "f")
                 {
@@ -140,7 +172,8 @@ namespace J2dConsole
 
             if (dart == null) return;
 
-            if(! FileUtil.writeFile(args[2], dart)) return;
+            var outFile = args.Length < 3 ? args[1] + ".dart" : args[2];
+            if(! FileUtil.writeFile(outFile, dart)) return;
 
             Console.WriteLine("Done");
 
@@ -155,6 +188,9 @@ namespace J2dConsole
                 +"to take input from the clipboard and write to the clipbord\r\n");
 
             Console.WriteLine(" -i \r\n for the interactive mode\r\n");
+
+            Console.WriteLine(" -s \r\n "
+                + "to get the Serializable class code\r\n");
         }
         
         static string createDartClass(string jsonText, string className = "RootClass")
