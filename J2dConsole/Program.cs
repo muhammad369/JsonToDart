@@ -13,7 +13,7 @@ namespace J2dConsole
         public static async Task Main(string[] args)
         {
             //args = new string[] {"-i" };
-            Console.WriteLine("DartToJson version 1.0.0");
+            Console.WriteLine("DartToJson version 1.0.1");
             //
             if(args.Length == 0)
             {
@@ -37,8 +37,8 @@ namespace J2dConsole
             }
             else writeHelp();
             //
-            Console.WriteLine("Press any key to exit");
-            Console.ReadKey();
+            //Console.WriteLine("Press any key to exit");
+            //Console.ReadKey();
 
         
         }
@@ -61,7 +61,7 @@ namespace J2dConsole
             }
             else if (option == "h")
             {
-                Console.WriteLine(dart);
+                ConsoleUtil.writeText(dart);
             }
             else if (option == "x")
             {
@@ -91,7 +91,7 @@ namespace J2dConsole
                 }
                 else if(option == "h")
                 {
-                    Console.WriteLine("Write your json and press CTRL+Enter to finish:");
+                    Console.WriteLine("Write your json, then write 'end' in a seperate line to finish:");
                     input = ConsoleUtil.readConsoleMultiline();
                 }
                 else if(option == "x")
@@ -130,7 +130,7 @@ namespace J2dConsole
                 }
                 else if (option == "h")
                 {
-                    Console.WriteLine(dart);
+                    ConsoleUtil.writeText(dart);
                 }
                 else if (option == "x")
                 {
@@ -184,7 +184,7 @@ namespace J2dConsole
             Console.WriteLine("\r\n -f [input file] [(optional) output file] [(optional) class name]\r\n"
                 +" to take json input file and write output dart file \r\n");
 
-            Console.WriteLine(" -c [class name]\r\n "
+            Console.WriteLine(" -c [(optional) class name]\r\n "
                 +"to take input from the clipboard and write to the clipbord\r\n");
 
             Console.WriteLine(" -i \r\n for the interactive mode\r\n");
@@ -200,11 +200,12 @@ namespace J2dConsole
             try
             {
                 var jp = new JsonParser();
+
                 var json = jp.Parse(jsonText);
 
                 if (!(json is JsonObject))
                 {
-                    Console.WriteLine("must be json object");
+                    ConsoleUtil.writeError("must be json object");
                     return null;
                 }
                 //
@@ -216,7 +217,7 @@ namespace J2dConsole
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                ConsoleUtil.writeError(ex.Message);
                 return null;
             }
         }

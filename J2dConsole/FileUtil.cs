@@ -17,8 +17,8 @@ namespace J2dConsole
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to read file: {path}");
-                Console.WriteLine(ex.Message);
+                ConsoleUtil.writeError($"Failed to read file: {path}");
+                ConsoleUtil.writeError(ex.Message);
                 return null;
             }
         }
@@ -33,8 +33,8 @@ namespace J2dConsole
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to write file: {path}");
-                Console.WriteLine(ex.Message);
+                ConsoleUtil.writeError($"Failed to write file: {path}");
+                ConsoleUtil.writeError(ex.Message);
                 return false;
             }
         }

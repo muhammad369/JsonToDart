@@ -17,7 +17,7 @@ namespace J2dConsole
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                ConsoleUtil.writeError(ex.Message);
                 return null;
             }
         }
@@ -32,7 +32,7 @@ namespace J2dConsole
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                ConsoleUtil.writeError(ex.Message);
                 return false;
             }
         }

@@ -33,17 +33,7 @@ namespace Selim.Json
             {
                 switch (state)
                 {
-                    //case 0:
-                    //    if (Regex.IsMatch(token.Value, "{"))
-                    //    {
-                    //        state = 1;
-                    //        stack.Push(new JsonObject());
-                    //    }
-                    //    else
-                    //    {
-                    //        parsingError();
-                    //    }
-                    //    break;
+                    
                     case 1:
                         if ( token.Value == "}")
                         {
@@ -224,6 +214,10 @@ namespace Selim.Json
                         break;
                 }
             }//end foreach
+            if (stack.Count == 0)
+            {
+                parsingError();
+            }
             return stack.Pop();
 
         }
@@ -232,7 +226,7 @@ namespace Selim.Json
 
         private void parsingError()
         {
-            throw new Exception("Parsing Error");
+            throw new Exception("Json Parsing Error");
         }
 
         
