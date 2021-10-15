@@ -44,8 +44,14 @@ to run it, open the CMD, go to the app folder, and write `j2d`, you will see hel
 
 For MacOS the app is available as console only, with the same options available for windows console
 
-to run it, open the Terminal app, go to the app folder, write `dotnet j2d.dll`, you will see the help text
+to run it, install `dotnet 5`, open the Terminal app, go to the app folder, write `dotnet j2d.dll`, you will see the help text
 
 ### Linux
 
-it should be easy to compile the console app for linux, but it's not yet tested :)
+For the clipboard to work in Linux, it requires [xsel](https://github.com/kfish/xsel), to install in Ubuntu, use the following command
+
+```
+apt-get install xsel
+```
+
+then install `dotnet 5`, open the Terminal app, go to the app folder, write `dotnet J2d.dll`, you will see the help text
