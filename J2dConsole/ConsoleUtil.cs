@@ -8,9 +8,8 @@ namespace J2dConsole
         public static string readConsoleMultiline()
         {
             StringBuilder output = new StringBuilder();
-
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
-            
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
             while(true)
             {
                 string line = Console.ReadLine();
@@ -29,7 +28,8 @@ namespace J2dConsole
 
         public static void writeText(string text)
         {
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
             //
             Console.Write(text);
             //
@@ -39,7 +39,7 @@ namespace J2dConsole
 
         public static void writeError(string text)
         {
-            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
             //
             Console.Write(text);
             //

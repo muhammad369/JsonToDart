@@ -172,8 +172,8 @@ namespace Selim.Json
 
         public override string toDartMapAssignmentExpr(string name)
         {
-            return $"\t\tif (this.{name} != null) {{\r\n" +
-                   $"\t\t\tdata['{name}'] = this.{name}!.toMap();\r\n"+
+            return $"\t\tif ({name} != null) {{\r\n" +
+                   $"\t\t\tdata['{name}'] = {name}!.toMap();\r\n"+
                    $"\t\t}}";
         }
 
@@ -249,8 +249,24 @@ namespace Selim.Json
 
         private void setInnerType(JsonObject jsonObject, string name)
         {
+            if (DartClassGenerator.classNames.ContainsKey(name))
+            {
+                name = this.className + capitalizeFirstLetter(name);
+            }
+            //
+            if (DartClassGenerator.classNames.ContainsKey(name))
+            {
+                int i = 1;
+                for (; i < 100; i++)
+                {
+                    if(!DartClassGenerator.classNames.ContainsKey(name+i)) break;
+                }
+                name = name + i;
+            }
+            //
             jsonObject.setClassName(capitalizeFirstLetter(name));
             DartClassGenerator.innerObjects.Enqueue(jsonObject);
+            DartClassGenerator.classNames.Add(name, null);
         }
 
         public static string capitalizeFirstLetter(string source)

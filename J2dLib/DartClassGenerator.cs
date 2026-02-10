@@ -10,11 +10,14 @@ namespace JsonToDart
     public class DartClassGenerator
     {
         public static Queue<JsonObject> innerObjects = new Queue<JsonObject>();
-
+        public static Dictionary<string, string> classNames= new Dictionary<string, string>();
 
         public string generateDartClass(JsonObject jsonObject, string className)
         {
+            classNames.Clear();
             innerObjects.Clear();
+            //
+            classNames.Add(className, null);
             jsonObject.setClassName(className);
             var sb = new StringBuilder();
             //

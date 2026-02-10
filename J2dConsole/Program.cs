@@ -13,7 +13,7 @@ namespace J2dConsole
         public static async Task Main(string[] args)
         {
             //args = new string[] {"-i" };
-            Console.WriteLine("JsonToDart version 1.0.2");
+            Console.WriteLine("JsonToDart version 1.0.3");
             //
             if(args.Length == 0)
             {
