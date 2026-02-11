@@ -40,6 +40,7 @@ namespace J2dConsole
         public static void writeError(string text)
         {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.BackgroundColor = ConsoleColor.Gray;
             //
             Console.Write(text);
             //

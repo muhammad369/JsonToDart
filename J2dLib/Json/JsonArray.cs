@@ -223,8 +223,8 @@ namespace Selim.Json
         {
 			var notObject = (Length == 0 || !(values[0] is JsonObject));
 
-			return $"\t\tif (this.{name} != null) {{\r\n" +
-				$"\t\t\tdata['{name}'] = this.{name}!.map((v) => v{(notObject? "": "?.toMap()")}).toList();\r\n" +
+			return $"\t\tif ({name} != null) {{\r\n" +
+				$"\t\t\tmap['{name}'] = {name}!.map((v) => v{(notObject? "": "?.toMap()")}).toList();\r\n" +
 				$"\t\t}}";
         }
 

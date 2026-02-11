@@ -173,7 +173,7 @@ namespace Selim.Json
         public override string toDartMapAssignmentExpr(string name)
         {
             return $"\t\tif ({name} != null) {{\r\n" +
-                   $"\t\t\tdata['{name}'] = {name}!.toMap();\r\n"+
+                   $"\t\t\tmap['{name}'] = {name}!.toMap();\r\n"+
                    $"\t\t}}";
         }
 
@@ -231,14 +231,14 @@ namespace Selim.Json
             // to map method
             sb.AppendLine("\t@override");
             sb.AppendLine("\tMap<String, dynamic> toMap() {");
-            sb.AppendLine("\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();");
+            sb.AppendLine("\t\tfinal Map<String, dynamic> map = <String, dynamic>{};");
             //
             foreach (var item in this.nameValues)
             {
                 sb.AppendLine(item.value.toDartMapAssignmentExpr(item.name));
             }
             //
-            sb.AppendLine("\t\treturn data;");
+            sb.AppendLine("\t\treturn map;");
             sb.AppendLine("\t}");
 
             sb.AppendLine("}");

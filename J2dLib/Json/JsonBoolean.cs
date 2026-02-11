@@ -17,7 +17,7 @@ namespace Selim.Json
 
         public override string toDartMapAssignmentExpr(string name)
         {
-            return $"\t\tdata['{name}'] = this.{name};";
+            return $"\t\tmap['{name}'] = {name};";
         }
 
         public override string toDartMapFetchingExpr(string name)
